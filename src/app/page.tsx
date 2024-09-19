@@ -8,13 +8,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
+import { chats } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { v4 as uuidv4 } from 'uuid'; // You might need to install this package
+
+
+
 
 export default async function Home() {
-  const { userId} = await auth();
+  const { userId } = await auth();
   const isAuth = !!userId;
-  if (isAuth) {
-    redirect("/chat/1");
+
+  let firstChat;
+  if (userId) {
+    let _chats = await db.select().from(chats).where(eq(chats.userId, userId));
+    if (_chats && _chats.length > 0) {
+      firstChat = _chats[0];
+    } else {
+      // Create a new chat if none exist
+      const newChat = await db.insert(chats).values({
+        userId,
+        pdfName: 'Welcome',
+        pdfUrl: '',
+        createdAt: new Date(),
+        fileKey: uuidv4(), // Generate a unique file key
+      }).returning();
+      firstChat = newChat[0];
+    }
   }
+
   return (
     <div className="relative flex flex-col min-h-screen bg-black text-white overflow-hidden">
       {/* Background Image */}
@@ -52,6 +75,12 @@ export default async function Home() {
                 <Link href="/sign-in">
                   <Button className="bg-orange-500 hover:bg-orange-600">
                     Login/Signup
+                  </Button>
+                </Link>
+              ) : firstChat ? (
+                <Link href={`/chat/${firstChat.id}`}>
+                  <Button className="bg-orange-500 hover:bg-orange-600">
+                    Go to Chat
                   </Button>
                 </Link>
               ) : (

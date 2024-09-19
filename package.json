@@ -13,6 +13,7 @@
     "@neondatabase/serverless": "^0.9.4",
     "@radix-ui/react-slot": "^1.1.0",
     "@types/pg": "^8.11.8",
+    "ai": "^3.3.33",
     "aws-sdk": "^2.1687.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -25,12 +26,14 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "drizzle-kit": "^0.24.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.6",
